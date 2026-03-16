@@ -1,0 +1,49 @@
+.card {
+    border: 1px solid #2f3542;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #1e232f;
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 250px;
+    text-align: center;
+    padding-bottom: 1rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.gameImage {
+    width: 100%;
+    height: 150px;
+    object-fit: cover; /* Чтобы картинка не искажалась */
+    border-bottom: 1px solid #3a4050;
+}
+
+.card h3 {
+    margin: 0.8rem 0 0.2rem;
+    color: #d4e0f0;
+}
+
+.card p {
+    color: #8a9bb5;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.findButton {
+    background-color: #4a6fa5;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.findButton:hover {
+    background-color: #5f8bc9;
+}
