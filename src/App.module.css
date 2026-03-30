@@ -36,3 +36,56 @@ body {
     flex-wrap: wrap;
     justify-content: center;
 }
+
+.pageTitle {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #e0e0e0;
+    border-left: 5px solid #ff7b42;
+    padding-left: 1rem;
+}
+
+.dialogsContainer {
+    display: flex;
+    gap: 20px;
+    height: 600px;
+    background-color: #1a1e2b;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.dialogsList {
+    width: 300px;
+    border-right: 1px solid #2f3542;
+    overflow-y: auto;
+}
+
+.messagesList {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Добавляем стили для состояний без выбранного диалога */
+.noDialogSelected,
+.noMessages {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8a9bb5;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 20px;
+}
+
+.messagesList {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: #151a24;
+}

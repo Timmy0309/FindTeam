@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Импортируем Link вместо обычных ссылок
 import styles from '../styles/Header.module.css';
 
 function Header() {
@@ -9,13 +10,14 @@ function Header() {
           src='https://cdn-icons-png.flaticon.com/512/3468/3468381.png'
           alt='Логотип платформы'
         />
-        <span className={styles.siteName}>GameTeam</span>
+        <Link to="/" className={styles.siteName}>GameTeam</Link> {/* Теперь это Link */}
       </div>
       <nav className={styles.nav}>
-        <a href="/">Главная</a>
-        <a href="/teams">Команды</a>
-        <a href="/players">Игроки</a>
-        <a href="/login">Войти</a>
+        <Link to="/">Главная</Link>
+        <Link to="/teams">Команды</Link>
+        <Link to="/players">Игроки</Link>
+        <Link to="/dialogs">Сообщения</Link>
+        <Link to="/profile">Профиль</Link>
       </nav>
     </header>
   );

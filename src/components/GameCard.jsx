@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from '../styles/GameCard.module.css';
 
-// Компонент принимает данные извне (через props)
 function GameCard({ gameName, imageUrl, playerCount }) {
   return (
     <div className={styles.card}>

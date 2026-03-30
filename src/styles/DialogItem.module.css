@@ -1,0 +1,58 @@
+.dialogItem {
+    border-bottom: 1px solid #2f3542;
+    transition: background-color 0.2s;
+}
+
+.dialogItem:hover {
+    background-color: #2a2f3f;
+}
+
+.dialogLink {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: white;
+}
+
+.dialogAvatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4a6fa5, #6b8cbb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-right: 15px;
+    color: white;
+}
+
+.dialogInfo {
+    flex: 1;
+}
+
+.dialogName {
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #e0e0e0;
+}
+
+.lastMessage {
+    font-size: 0.85rem;
+    color: #8a9bb5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.activeDialog {
+    background-color: #2f3a4f;
+    border-left: 4px solid #ff7b42;
+}
+
+.activeDialog .dialogLink {
+    padding-left: 11px; /* Уменьшаем отступ слева, чтобы компенсировать бордер */
+}
