@@ -68,7 +68,6 @@ body {
     flex-direction: column;
 }
 
-/* Добавляем стили для состояний без выбранного диалога */
 .noDialogSelected,
 .noMessages {
     height: 100%;
@@ -88,4 +87,55 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #151a24;
+}
+
+.chatArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #151a24;
+}
+
+.onlineBadge {
+    font-size: 0.8rem;
+    color: #4caf50;
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+.messageForm {
+    display: flex;
+    padding: 15px;
+    background-color: #1a1e2b;
+    border-top: 1px solid #2f3542;
+    gap: 10px;
+}
+
+.messageInput {
+    flex: 1;
+    padding: 10px 15px;
+    background-color: #2a2f3f;
+    border: 1px solid #3a4050;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+}
+
+.messageInput:focus {
+    outline: none;
+    border-color: #4a6fa5;
+}
+
+.sendButton {
+    background-color: #4a6fa5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sendButton:hover {
+    background-color: #5f8bc9;
 }

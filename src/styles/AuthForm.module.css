@@ -1,0 +1,111 @@
+.authContainer {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #0f1219 0%, #1a1e2b 100%);
+}
+
+.authCard {
+    background-color: #1e232f;
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid #2f3542;
+}
+
+.authCard h2 {
+    color: #e0e0e0;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.formGroup label {
+    color: #b0c4de;
+    font-weight: 500;
+}
+
+.formGroup input {
+    background-color: #2a2f3f;
+    border: 1px solid #3a4050;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.formGroup input:focus {
+    outline: none;
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.3);
+}
+
+.formGroup input::placeholder {
+    color: #6a7085;
+}
+
+.submitButton {
+    background: linear-gradient(135deg, #4a6fa5, #5f8bc9);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 111, 165, 0.4);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.errorMessage {
+    background-color: rgba(255, 87, 34, 0.1);
+    border: 1px solid #ff5722;
+    color: #ff8a65;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.authFooter {
+    text-align: center;
+    margin-top: 20px;
+    color: #8a9bb5;
+}
+
+.authFooter a {
+    color: #4a6fa5;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.authFooter a:hover {
+    text-decoration: underline;
+}

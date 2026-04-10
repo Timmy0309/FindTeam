@@ -21,13 +21,18 @@ const DialogItem = (props) => {
             {props.avatar || props.name.charAt(0)}
           </div>
           <span className={onlineStatusClass}></span>
+          {props.unreadCount > 0 && (
+            <span className={styles.unreadBadge}>{props.unreadCount}</span>
+          )}
         </div>
         <div className={styles.dialogInfo}>
           <div className={styles.dialogHeader}>
             <div className={styles.dialogName}>{props.name}</div>
             {props.game && <div className={styles.gameTag}>{props.game}</div>}
           </div>
-          <div className={styles.lastMessage}>{props.lastMessage || "Нет сообщений"}</div>
+          <div className={styles.lastMessage}>
+            {props.lastMessage?.substring(0, 50) || props.lastMessage || "Нет сообщений"}
+          </div>
         </div>
       </Link>
     </div>

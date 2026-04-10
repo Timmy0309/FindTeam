@@ -1,0 +1,75 @@
+.authButtons {
+    display: flex;
+    gap: 10px;
+}
+
+.loginButton,
+.registerButton {
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.loginButton {
+    color: #b0c4de;
+    border: 1px solid #4a6fa5;
+}
+
+.loginButton:hover {
+    background-color: rgba(74, 111, 165, 0.1);
+    color: white;
+}
+
+.registerButton {
+    background-color: #4a6fa5;
+    color: white;
+}
+
+.registerButton:hover {
+    background-color: #5f8bc9;
+    transform: translateY(-1px);
+}
+
+.userMenu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.userAvatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff7b42, #ff5722);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+}
+
+.userName {
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+.logoutButton {
+    background-color: transparent;
+    border: 1px solid #ff5722;
+    color: #ff8a65;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.logoutButton:hover {
+    background-color: rgba(255, 87, 34, 0.1);
+}

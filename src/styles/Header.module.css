@@ -35,3 +35,16 @@
 .nav a:hover {
     color: #4a6fa5;
 }
+
+.createTeamLink {
+    background-color: #ff7b42;
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: white !important;
+    transition: background-color 0.3s;
+}
+
+.createTeamLink:hover {
+    background-color: #ff5722;
+    color: white !important;
+}
