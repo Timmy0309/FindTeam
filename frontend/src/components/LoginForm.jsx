@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginSuccess, loginStart, loginFailure } from '../store/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../store/slices/authSlice'; // Используем асинхронный экшен
 import styles from '../styles/AuthForm.module.css';
 
 function LoginForm() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
   
   const [formData, setFormData] = useState({
@@ -21,28 +23,15 @@ function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginStart());
     
-    // Имитация API запроса
-    setTimeout(() => {
-      // Простая валидация для демонстрации
-      if (formData.email && formData.password) {
-        const user = {
-          id: 1,
-          name: formData.email.split('@')[0],
-          email: formData.email,
-          avatar: formData.email.charAt(0).toUpperCase()
-        };
-        
-        dispatch(loginSuccess({
-          user: user,
-          roles: ['user'],
-          rights: ['can_view_teams', 'can_view_players', 'can_send_messages', 'can_create_teams']
-        }));
-      } else {
-        dispatch(loginFailure('Неверный email или пароль'));
-      }
-    }, 1000);
+    const result = await dispatch(loginUser({
+      email: formData.email,
+      password: formData.password
+    }));
+    
+    if (result.meta.requestStatus === 'fulfilled') {
+      navigate('/');
+    }
   };
 
   return (

@@ -1,0 +1,87 @@
+.createTeamContainer {
+    min-height: calc(100vh - 200px);
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #0f1219 0%, #1a1e2b 100%);
+}
+
+.createTeamCard {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #1e232f;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid #2f3542;
+}
+
+.createTeamCard h2 {
+    color: #e0e0e0;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.createTeamForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.formGroup label {
+    color: #b0c4de;
+    font-weight: 500;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+    background-color: #2a2f3f;
+    border: 1px solid #3a4050;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+    outline: none;
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.3);
+}
+
+.formGroup textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.submitButton {
+    background: linear-gradient(135deg, #4a6fa5, #5f8bc9);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 111, 165, 0.4);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerSuccess, registerStart, registerFailure } from '../store/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../store/slices/authSlice'; // Используем асинхронный экшен
 import styles from '../styles/AuthForm.module.css';
 
 function RegisterForm() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
   
   const [formData, setFormData] = useState({
@@ -24,27 +26,22 @@ function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Валидация паролей
     if (formData.password !== formData.confirmPassword) {
-      dispatch(registerFailure('Пароли не совпадают'));
+      alert('Пароли не совпадают');
       return;
     }
     
-    dispatch(registerStart());
+    // Отправляем данные на регистрацию
+    const result = await dispatch(registerUser({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password
+    }));
     
-    setTimeout(() => {
-      const user = {
-        id: Date.now(),
-        name: formData.name,
-        email: formData.email,
-        avatar: formData.name.charAt(0).toUpperCase()
-      };
-      
-      dispatch(registerSuccess({
-        user: user,
-        roles: ['user'],
-        rights: ['can_view_teams', 'can_view_players', 'can_send_messages', 'can_create_teams']
-      }));
-    }, 1000);
+    if (result.meta.requestStatus === 'fulfilled') {
+      navigate('/');
+    }
   };
 
   return (
