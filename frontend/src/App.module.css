@@ -66,27 +66,29 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    background-color: #151a24;
+    gap: 8px;
+}
+
+.chatPlaceholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #151a24;
 }
 
 .noDialogSelected,
 .noMessages {
     height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     color: #8a9bb5;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     text-align: center;
     padding: 20px;
-}
-
-.messagesList {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    background-color: #151a24;
 }
 
 .chatArea {
@@ -138,4 +140,559 @@ body {
 
 .sendButton:hover {
     background-color: #5f8bc9;
+}
+
+/* Стили для TeamsPage */
+.teamsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.filterSection {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filterSection label {
+    color: #b0c4de;
+    font-weight: 500;
+}
+
+.filterSelect {
+    background-color: #2a2f3f;
+    border: 1px solid #3a4050;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.teamsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.teamCard {
+    background-color: #1e232f;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #2f3542;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.teamCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.teamHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.teamHeader h3 {
+    color: #e0e0e0;
+    font-size: 1.2rem;
+}
+
+.teamDescription {
+    color: #8a9bb5;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.teamInfo {
+    display: flex;
+    justify-content: space-between;
+    color: #b0c4de;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #2f3542;
+}
+
+.teamActions {
+    display: flex;
+    gap: 10px;
+}
+
+.joinButton, .leaveButton {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.joinButton {
+    background-color: #4a6fa5;
+    color: white;
+}
+
+.joinButton:hover:not(:disabled) {
+    background-color: #5f8bc9;
+}
+
+.joinButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.leaveButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.leaveButton:hover {
+    background-color: #c82333;
+}
+
+.loading {
+    text-align: center;
+    color: #8a9bb5;
+    padding: 50px;
+    font-size: 1.2rem;
+}
+
+.noTeams {
+    text-align: center;
+    padding: 50px;
+    color: #8a9bb5;
+}
+
+.createFirstTeam {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #4a6fa5;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.createFirstTeam:hover {
+    background-color: #5f8bc9;
+}
+
+.errorMessage {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Стили для HomePage */
+.gameIcon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 15px;
+}
+
+.gameCard {
+    background-color: #1e232f;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.gameCard:hover {
+    transform: translateY(-5px);
+}
+
+.quickActionsSection {
+    margin-top: 50px;
+}
+
+.quickActionsSection h2 {
+    margin-bottom: 25px;
+    color: #e0e0e0;
+}
+
+.quickActionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.quickActionCard {
+    background: linear-gradient(135deg, #1e232f, #2a2f3f);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.2s;
+    border: 1px solid #2f3542;
+}
+
+.quickActionCard:hover {
+    transform: translateY(-5px);
+    border-color: #4a6fa5;
+}
+
+.quickActionIcon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.quickActionCard h3 {
+    color: #e0e0e0;
+    margin-bottom: 10px;
+}
+
+.quickActionCard p {
+    color: #8a9bb5;
+    font-size: 0.9rem;
+}
+
+.ctaSection {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.ctaCard {
+    background: linear-gradient(135deg, #1e232f, #2a2f3f);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid #4a6fa5;
+}
+
+.ctaCard h2 {
+    color: #e0e0e0;
+    margin-bottom: 15px;
+}
+
+.ctaCard p {
+    color: #8a9bb5;
+    margin-bottom: 25px;
+}
+
+.ctaButtons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.primaryButton, .secondaryButton {
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.primaryButton {
+    background-color: #4a6fa5;
+    color: white;
+}
+
+.primaryButton:hover {
+    background-color: #5f8bc9;
+}
+
+.secondaryButton {
+    border: 1px solid #4a6fa5;
+    color: #4a6fa5;
+}
+
+.secondaryButton:hover {
+    background-color: rgba(74, 111, 165, 0.1);
+}
+
+.sectionSubtitle {
+    color: #8a9bb5;
+    margin-bottom: 1.5rem;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 40px;
+    color: #8a9bb5;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #b0c4de;
+    cursor: pointer;
+}
+
+.chatButton {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #2d6a4f;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.chatButton:hover:not(:disabled) {
+    background-color: #40916c;
+}
+
+.deleteButton {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #6c757d;
+    color: white;
+}
+
+.deleteButton:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+
+.dialogsPageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.newDialogPanel {
+    background: #1e232f;
+    border: 1px solid #2f3542;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.usersList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.usersList button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #2a2f3f;
+    border: 1px solid #3a4050;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+}
+
+.usersList button:hover {
+    border-color: #4a6fa5;
+}
+
+.userAvatarSmall {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #4a6fa5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.backToDialogs {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: transparent;
+    border: none;
+    color: #4a6fa5;
+    cursor: pointer;
+    text-align: left;
+}
+
+.emptyHint {
+    padding: 20px;
+    color: #8a9bb5;
+    font-size: 0.9rem;
+}
+
+.searchInput {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    background: #2a2f3f;
+    border: 1px solid #3a4050;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+}
+
+.playersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.playerCard {
+    background: #1e232f;
+    border: 1px solid #2f3542;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.playerAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #4a6fa5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.playerInfo h3 {
+    color: #e0e0e0;
+    margin-bottom: 4px;
+}
+
+.playerInfo p {
+    color: #8a9bb5;
+    font-size: 0.85rem;
+}
+
+.findButton {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: #4a6fa5;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.findButton:hover {
+    background: #5f8bc9;
+}
+
+.gameBadge {
+    background: rgba(74, 111, 165, 0.2);
+    color: #8ab4f8;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.pageTitleInline {
+    font-size: 2rem;
+    margin: 0;
+    color: #e0e0e0;
+    border-left: 5px solid #ff7b42;
+    padding-left: 1rem;
+}
+
+.loadingText {
+    color: #8a9bb5;
+    padding: 8px 0;
+}
+
+.usersList li button span small {
+    display: block;
+    color: #8a9bb5;
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+.usersList li button span strong {
+    color: #e0e0e0;
+}
+
+.primaryButton,
+.secondaryButton {
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: inline-block;
+    text-align: center;
+}
+
+button.primaryButton {
+    font-family: inherit;
+}
+
+@media (max-width: 900px) {
+    .dialogsContainer {
+        flex-direction: column;
+        height: auto;
+        min-height: 500px;
+    }
+
+    .dialogsList {
+        width: 100%;
+        max-height: 220px;
+        border-right: none;
+        border-bottom: 1px solid #2f3542;
+    }
+
+    .teamsHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .teamsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .cardGrid {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .mainContent {
+        padding: 12px;
+    }
+
+    .pageTitle,
+    .pageTitleInline {
+        font-size: 1.5rem;
+    }
+
+    .teamActions {
+        flex-direction: column;
+    }
+
+    .ctaButtons {
+        flex-direction: column;
+    }
 }

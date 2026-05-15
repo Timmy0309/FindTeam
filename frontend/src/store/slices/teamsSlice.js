@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { teamAPI } from '../../services/api';
 
-// Асинхронные действия для CRUD операций
 export const fetchTeams = createAsyncThunk(
   'teams/fetchTeams',
   async (filters, { rejectWithValue }) => {
@@ -10,6 +9,18 @@ export const fetchTeams = createAsyncThunk(
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Ошибка загрузки команд');
+    }
+  }
+);
+
+export const fetchUserTeams = createAsyncThunk(
+  'teams/fetchUserTeams',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await teamAPI.getUserTeams();
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || 'Ошибка загрузки ваших команд');
     }
   }
 );
@@ -74,6 +85,13 @@ export const leaveTeam = createAsyncThunk(
   }
 );
 
+const updateTeamInList = (teams, updated) => {
+  const index = teams.findIndex((t) => t.id === updated.id);
+  if (index !== -1) {
+    teams[index] = updated;
+  }
+};
+
 const initialState = {
   teams: [],
   userTeams: [],
@@ -81,8 +99,8 @@ const initialState = {
   error: null,
   filters: {
     game: 'all',
-    playersNeeded: 'all'
-  }
+    playersNeeded: 'all',
+  },
 };
 
 const teamsSlice = createSlice({
@@ -94,11 +112,10 @@ const teamsSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Teams
       .addCase(fetchTeams.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -111,36 +128,41 @@ const teamsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Create Team
+      .addCase(fetchUserTeams.fulfilled, (state, action) => {
+        state.userTeams = action.payload;
+      })
       .addCase(createTeam.fulfilled, (state, action) => {
         state.teams.unshift(action.payload);
+        state.userTeams.unshift(action.payload);
       })
-      // Update Team
+      .addCase(createTeam.rejected, (state, action) => {
+        state.error = action.payload;
+      })
       .addCase(updateTeam.fulfilled, (state, action) => {
-        const index = state.teams.findIndex(t => t.id === action.payload.id);
-        if (index !== -1) {
-          state.teams[index] = action.payload;
-        }
+        updateTeamInList(state.teams, action.payload);
+        updateTeamInList(state.userTeams, action.payload);
       })
-      // Delete Team
       .addCase(deleteTeam.fulfilled, (state, action) => {
-        state.teams = state.teams.filter(t => t.id !== action.payload);
+        state.teams = state.teams.filter((t) => t.id !== action.payload);
+        state.userTeams = state.userTeams.filter((t) => t.id !== action.payload);
       })
-      // Join Team
       .addCase(joinTeam.fulfilled, (state, action) => {
-        const index = state.teams.findIndex(t => t.id === action.payload.id);
-        if (index !== -1) {
-          state.teams[index] = action.payload;
+        updateTeamInList(state.teams, action.payload);
+        if (!state.userTeams.find((t) => t.id === action.payload.id)) {
+          state.userTeams.unshift(action.payload);
         }
       })
-      // Leave Team
+      .addCase(joinTeam.rejected, (state, action) => {
+        state.error = action.payload;
+      })
       .addCase(leaveTeam.fulfilled, (state, action) => {
-        const index = state.teams.findIndex(t => t.id === action.payload.id);
-        if (index !== -1) {
-          state.teams[index] = action.payload;
-        }
+        updateTeamInList(state.teams, action.payload);
+        state.userTeams = state.userTeams.filter((t) => t.id !== action.payload.id);
+      })
+      .addCase(leaveTeam.rejected, (state, action) => {
+        state.error = action.payload;
       });
-  }
+  },
 });
 
 export const { setFilters, clearError } = teamsSlice.actions;

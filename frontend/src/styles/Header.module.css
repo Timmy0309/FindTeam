@@ -3,9 +3,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background-color: #1a1e2b; /* Темный фон */
+    background-color: #1a1e2b;
     color: white;
-    border-bottom: 3px solid #4a6fa5; /* Акцентная линия */
+    border-bottom: 3px solid #4a6fa5;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .logo {
@@ -14,22 +16,35 @@
     gap: 10px;
 }
 
-.logo img {
-    width: 40px;
-    height: 40px;
+.logoIcon {
+    font-size: 1.8rem;
+    line-height: 1;
 }
 
 .siteName {
     font-size: 1.5rem;
     font-weight: bold;
     color: #fff;
+    text-decoration: none;
+}
+
+.siteName:hover {
+    color: #4a6fa5;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .nav a {
     color: #b0c4de;
     text-decoration: none;
-    margin-left: 20px;
+    margin-left: 12px;
     transition: color 0.3s;
+    white-space: nowrap;
 }
 
 .nav a:hover {
@@ -42,9 +57,21 @@
     border-radius: 8px;
     color: white !important;
     transition: background-color 0.3s;
+    margin-left: 12px !important;
 }
 
 .createTeamLink:hover {
     background-color: #ff5722;
     color: white !important;
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem;
+    }
+
+    .nav a {
+        margin-left: 8px;
+        font-size: 0.9rem;
+    }
 }

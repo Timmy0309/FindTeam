@@ -85,3 +85,13 @@
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+.errorMessage {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    text-align: center;
+}

@@ -1,9 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { messageAPI } from '../../services/api';
 
-// Асинхронные действия для работы с API
+const dialogKey = (id) => String(id);
 
-// Получение всех диалогов пользователя (READ)
 export const fetchDialogs = createAsyncThunk(
   'dialogs/fetchDialogs',
   async (_, { rejectWithValue }) => {
@@ -16,33 +15,34 @@ export const fetchDialogs = createAsyncThunk(
   }
 );
 
-// Получение сообщений конкретного диалога (READ)
 export const fetchMessages = createAsyncThunk(
   'dialogs/fetchMessages',
   async (dialogId, { rejectWithValue }) => {
     try {
       const response = await messageAPI.getMessages(dialogId);
-      return { dialogId, messages: response.data.data };
+      return { dialogId: dialogKey(dialogId), messages: response.data.data };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Ошибка загрузки сообщений');
     }
   }
 );
 
-// Отправка нового сообщения (CREATE)
 export const sendMessageToAPI = createAsyncThunk(
   'dialogs/sendMessage',
-  async ({ dialog_id, message }, { rejectWithValue }) => {
+  async ({ dialog_id, message, tempId }, { rejectWithValue }) => {
     try {
       const response = await messageAPI.sendMessage({ dialog_id, message });
-      return response.data.data;
+      return { ...response.data.data, tempId };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Ошибка отправки сообщения');
+      return rejectWithValue({
+        error: error.response?.data?.error || 'Ошибка отправки',
+        tempId,
+        dialogId: dialog_id,
+      });
     }
   }
 );
 
-// Создание нового диалога (CREATE)
 export const createDialog = createAsyncThunk(
   'dialogs/createDialog',
   async (user2Id, { rejectWithValue }) => {
@@ -55,13 +55,24 @@ export const createDialog = createAsyncThunk(
   }
 );
 
-// Удаление сообщения (DELETE)
+export const openTeamChat = createAsyncThunk(
+  'dialogs/openTeamChat',
+  async (teamId, { rejectWithValue }) => {
+    try {
+      const response = await messageAPI.getTeamDialog(teamId);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || 'Ошибка открытия командного чата');
+    }
+  }
+);
+
 export const deleteMessageFromAPI = createAsyncThunk(
   'dialogs/deleteMessage',
-  async (messageId, { rejectWithValue }) => {
+  async ({ messageId, dialogId }, { rejectWithValue }) => {
     try {
       await messageAPI.deleteMessage(messageId);
-      return messageId;
+      return { messageId, dialogId: dialogKey(dialogId) };
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Ошибка удаления сообщения');
     }
@@ -69,11 +80,11 @@ export const deleteMessageFromAPI = createAsyncThunk(
 );
 
 const initialState = {
-  dialogs: [],           // Список диалогов из API
-  messages: {},          // Объект с сообщениями: { dialogId: [messages] }
+  dialogs: [],
+  messages: {},
   activeDialogId: null,
   loading: false,
-  error: null
+  error: null,
 };
 
 const dialogsSlice = createSlice({
@@ -81,41 +92,45 @@ const dialogsSlice = createSlice({
   initialState,
   reducers: {
     setActiveDialog: (state, action) => {
-      state.activeDialogId = action.payload;
+      state.activeDialogId = action.payload ? dialogKey(action.payload) : null;
     },
     clearError: (state) => {
       state.error = null;
     },
-    // Оптимистичное обновление для нового сообщения (без ожидания ответа от сервера)
     addMessageOptimistic: (state, action) => {
-      const { dialogId, message } = action.payload;
-      if (!state.messages[dialogId]) {
-        state.messages[dialogId] = [];
+      const { dialogId, message, tempId } = action.payload;
+      const key = dialogKey(dialogId);
+
+      if (!state.messages[key]) {
+        state.messages[key] = [];
       }
-      
-      const newMessage = {
-        id: Date.now(),
-        dialog_id: dialogId,
+
+      state.messages[key].push({
+        id: tempId,
+        tempId,
+        dialog_id: Number(dialogId),
         message: message.message,
         user_id: message.user_id,
         is_my_message: true,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        created_at: new Date().toISOString()
-      };
-      
-      state.messages[dialogId].push(newMessage);
-      
-      // Обновляем последнее сообщение в диалоге
-      const dialog = state.dialogs.find(d => d.id === parseInt(dialogId));
+        created_at: new Date().toISOString(),
+        pending: true,
+      });
+
+      const dialog = state.dialogs.find((d) => d.id === Number(dialogId));
       if (dialog) {
         dialog.last_message = message.message;
         dialog.last_message_time = new Date().toISOString();
       }
-    }
+    },
+    removeOptimisticMessage: (state, action) => {
+      const { dialogId, tempId } = action.payload;
+      const key = dialogKey(dialogId);
+      state.messages[key] = (state.messages[key] || []).filter((m) => m.tempId !== tempId);
+    },
   },
   extraReducers: (builder) => {
     builder
-      // Получение диалогов
       .addCase(fetchDialogs.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -128,8 +143,6 @@ const dialogsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
-      // Получение сообщений
       .addCase(fetchMessages.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -143,51 +156,58 @@ const dialogsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
-      // Отправка сообщения
       .addCase(sendMessageToAPI.fulfilled, (state, action) => {
         const newMessage = action.payload;
-        const dialogId = newMessage.dialog_id;
-        
-        if (!state.messages[dialogId]) {
-          state.messages[dialogId] = [];
+        const key = dialogKey(newMessage.dialog_id);
+
+        if (!state.messages[key]) {
+          state.messages[key] = [];
         }
-        
-        // Заменяем оптимистичное сообщение на реальное от сервера
-        // Ищем последнее сообщение с таким же текстом и временем
-        const lastMessage = state.messages[dialogId][state.messages[dialogId].length - 1];
-        if (lastMessage && lastMessage.message === newMessage.message && !lastMessage.id) {
-          state.messages[dialogId][state.messages[dialogId].length - 1] = newMessage;
+
+        const idx = state.messages[key].findIndex((m) => m.tempId === newMessage.tempId);
+        if (idx !== -1) {
+          state.messages[key][idx] = { ...newMessage, pending: false };
         } else {
-          state.messages[dialogId].push(newMessage);
+          state.messages[key].push(newMessage);
         }
-        
-        // Обновляем последнее сообщение в диалоге
-        const dialog = state.dialogs.find(d => d.id === dialogId);
+
+        const dialog = state.dialogs.find((d) => d.id === newMessage.dialog_id);
         if (dialog) {
           dialog.last_message = newMessage.message;
           dialog.last_message_time = newMessage.created_at;
         }
       })
       .addCase(sendMessageToAPI.rejected, (state, action) => {
-        state.error = action.payload;
-      })
-      
-      // Создание диалога
-      .addCase(createDialog.fulfilled, (state, action) => {
-        state.dialogs.unshift(action.payload);
-      })
-      
-      // Удаление сообщения
-      .addCase(deleteMessageFromAPI.fulfilled, (state, action) => {
-        const messageId = action.payload;
-        // Удаляем сообщение из всех диалогов
-        for (const dialogId in state.messages) {
-          state.messages[dialogId] = state.messages[dialogId].filter(m => m.id !== messageId);
+        state.error = action.payload?.error || action.payload;
+        const { dialogId, tempId } = action.payload || {};
+        if (dialogId && tempId) {
+          const key = dialogKey(dialogId);
+          state.messages[key] = (state.messages[key] || []).filter((m) => m.tempId !== tempId);
         }
+      })
+      .addCase(createDialog.fulfilled, (state, action) => {
+        const index = state.dialogs.findIndex((d) => d.id === action.payload.id);
+        if (index === -1) {
+          state.dialogs.unshift(action.payload);
+        } else {
+          state.dialogs[index] = action.payload;
+        }
+      })
+      .addCase(openTeamChat.fulfilled, (state, action) => {
+        const exists = state.dialogs.find((d) => d.id === action.payload.id);
+        if (!exists) {
+          state.dialogs.unshift(action.payload);
+        }
+      })
+      .addCase(deleteMessageFromAPI.fulfilled, (state, action) => {
+        const { messageId, dialogId } = action.payload;
+        state.messages[dialogId] = (state.messages[dialogId] || []).filter(
+          (m) => m.id !== messageId
+        );
       });
-  }
+  },
 });
 
-export const { setActiveDialog, clearError, addMessageOptimistic } = dialogsSlice.actions;
+export const { setActiveDialog, clearError, addMessageOptimistic, removeOptimisticMessage } =
+  dialogsSlice.actions;
 export default dialogsSlice.reducer;

@@ -1,27 +1,34 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createTeam } from '../store/slices/teamsSlice';
+import { createTeam, clearError } from '../store/slices/teamsSlice';
+import { fetchGames } from '../store/slices/gamesSlice';
 import styles from '../styles/CreateTeamForm.module.css';
 
 function CreateTeamForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { games } = useSelector((state) => state.games);
+  const { error } = useSelector((state) => state.teams);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     game: '',
     description: '',
-    max_players: 5
+    max_players: 5,
   });
 
-  const games = ['Dota 2', 'CS2', 'Valorant', 'League of Legends', 'Apex Legends'];
+  useEffect(() => {
+    dispatch(fetchGames());
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'max_players' ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -38,6 +45,7 @@ function CreateTeamForm() {
     <div className={styles.createTeamContainer}>
       <div className={styles.createTeamCard}>
         <h2>Создание команды</h2>
+        {error && <div className={styles.errorMessage}>{error}</div>}
         <form onSubmit={handleSubmit} className={styles.createTeamForm}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Название команды</label>
@@ -62,14 +70,16 @@ function CreateTeamForm() {
               required
             >
               <option value="">Выберите игру</option>
-              {games.map(game => (
-                <option key={game} value={game}>{game}</option>
+              {games.map((game) => (
+                <option key={game.id} value={game.name}>
+                  {game.icon} {game.name}
+                </option>
               ))}
             </select>
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="max_players">Максимальное количество игроков</label>
+            <label htmlFor="max_players">Максимум игроков</label>
             <input
               type="number"
               id="max_players"
@@ -83,17 +93,16 @@ function CreateTeamForm() {
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="description">Описание команды</label>
+            <label htmlFor="description">Описание</label>
             <textarea
               id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="Расскажите о вашей команде, требованиях к игрокам и т.д."
+              placeholder="Расскажите о команде и требованиях к игрокам"
               rows="5"
             />
           </div>
-
           <button type="submit" className={styles.submitButton} disabled={loading}>
             {loading ? 'Создание...' : 'Создать команду'}
           </button>

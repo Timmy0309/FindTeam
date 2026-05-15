@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -9,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Интерцептор для добавления токена к запросам
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -18,16 +17,16 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Интерцептор для обработки ошибок
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const hadToken = !!localStorage.getItem('token');
+    const isAuthRoute = ['/login', '/register'].includes(window.location.pathname);
+
+    if (error.response?.status === 401 && hadToken && !isAuthRoute) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
@@ -36,7 +35,6 @@ api.interceptors.response.use(
   }
 );
 
-// API для пользователей
 export const userAPI = {
   register: (userData) => api.post('/users/register', userData),
   login: (credentials) => api.post('/users/login', credentials),
@@ -46,11 +44,16 @@ export const userAPI = {
   deleteUser: (id) => api.delete(`/users/${id}`),
 };
 
-// API для команд
+export const gameAPI = {
+  getGames: () => api.get('/games'),
+  getPopularGames: () => api.get('/games/popular'),
+};
+
 export const teamAPI = {
   createTeam: (teamData) => api.post('/teams', teamData),
   getTeams: (filters) => api.get('/teams', { params: filters }),
   getTeam: (id) => api.get(`/teams/${id}`),
+  getTeamMembers: (id) => api.get(`/teams/${id}/members`),
   updateTeam: (id, teamData) => api.put(`/teams/${id}`, teamData),
   deleteTeam: (id) => api.delete(`/teams/${id}`),
   joinTeam: (id) => api.post(`/teams/${id}/join`),
@@ -58,13 +61,13 @@ export const teamAPI = {
   getUserTeams: () => api.get('/teams/my'),
 };
 
-// API для сообщений
 export const messageAPI = {
   sendMessage: (data) => api.post('/messages', data),
   getMessages: (dialogId) => api.get(`/messages/dialogs/${dialogId}`),
   createDialog: (user2Id) => api.post('/messages/dialogs', { user2_id: user2Id }),
+  getTeamDialog: (teamId) => api.get(`/messages/team/${teamId}`),
   getUserDialogs: () => api.get('/messages/dialogs'),
-  deleteMessage: (id) => api.delete(`/messages/messages/${id}`),
+  deleteMessage: (id) => api.delete(`/messages/${id}`),
 };
 
 export default api;

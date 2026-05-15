@@ -3,11 +3,13 @@ const router = express.Router();
 const messageController = require('../controllers/messageController');
 const { authenticate } = require('../middleware/auth');
 
-// Защищенные маршруты
-router.post('/', authenticate, messageController.sendMessage); // CREATE
-router.get('/dialogs', authenticate, messageController.getUserDialogs); // READ dialogs
-router.post('/dialogs', authenticate, messageController.createDialog); // CREATE dialog
-router.get('/dialogs/:dialogId', authenticate, messageController.getMessages); // READ messages
-router.delete('/messages/:id', authenticate, messageController.deleteMessage); // DELETE
+router.use(authenticate);
+
+router.post('/', messageController.sendMessage);
+router.get('/dialogs', messageController.getUserDialogs);
+router.post('/dialogs', messageController.createDialog);
+router.get('/team/:teamId', messageController.getTeamDialog);
+router.get('/dialogs/:dialogId', messageController.getMessages);
+router.delete('/:id', messageController.deleteMessage);
 
 module.exports = router;

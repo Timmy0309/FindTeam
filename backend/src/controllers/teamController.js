@@ -1,21 +1,38 @@
 const Team = require('../models/Team');
+const Game = require('../models/Game');
+const Message = require('../models/Message');
 
-// Создание команды (CREATE)
 const createTeam = async (req, res) => {
   try {
-    const teamData = {
-      ...req.body,
-      captain_id: req.user.id // Из JWT токена
-    };
-    const team = await Team.create(teamData);
-    res.status(201).json({ success: true, data: team });
+    const { name, game, description, max_players } = req.body;
+
+    if (!name?.trim() || !game?.trim()) {
+      return res.status(400).json({ error: 'Укажите название команды и игру' });
+    }
+
+    const gameExists = await Game.findByName(game);
+    if (!gameExists) {
+      return res.status(400).json({ error: 'Выберите игру из списка' });
+    }
+
+    const team = await Team.create({
+      name: name.trim(),
+      game: game.trim(),
+      description,
+      max_players: Number(max_players) || 5,
+      captain_id: req.user.id,
+    });
+
+    await Message.createTeamDialog(team.id, team.name);
+
+    const fullTeam = await Team.findById(team.id);
+    res.status(201).json({ success: true, data: fullTeam });
   } catch (error) {
     console.error('Create team error:', error);
     res.status(500).json({ error: 'Ошибка при создании команды' });
   }
 };
 
-// Получение всех команд (READ)
 const getTeams = async (req, res) => {
   try {
     const { game, playersNeeded } = req.query;
@@ -27,7 +44,6 @@ const getTeams = async (req, res) => {
   }
 };
 
-// Получение команды по ID (READ)
 const getTeamById = async (req, res) => {
   try {
     const team = await Team.findById(req.params.id);
@@ -41,27 +57,36 @@ const getTeamById = async (req, res) => {
   }
 };
 
-// Обновление команды (UPDATE)
 const updateTeam = async (req, res) => {
   try {
-    const team = await Team.update(req.params.id, req.body);
+    const team = await Team.findById(req.params.id);
     if (!team) {
       return res.status(404).json({ error: 'Команда не найдена' });
     }
-    res.json({ success: true, data: team });
+    if (Number(team.captain_id) !== Number(req.user.id)) {
+      return res.status(403).json({ error: 'Только капитан может редактировать команду' });
+    }
+
+    const updated = await Team.update(req.params.id, req.body);
+    const fullTeam = await Team.findById(updated.id);
+    res.json({ success: true, data: fullTeam });
   } catch (error) {
     console.error('Update team error:', error);
     res.status(500).json({ error: 'Ошибка при обновлении команды' });
   }
 };
 
-// Удаление команды (DELETE)
 const deleteTeam = async (req, res) => {
   try {
-    const team = await Team.delete(req.params.id);
+    const team = await Team.findById(req.params.id);
     if (!team) {
       return res.status(404).json({ error: 'Команда не найдена' });
     }
+    if (Number(team.captain_id) !== Number(req.user.id)) {
+      return res.status(403).json({ error: 'Только капитан может удалить команду' });
+    }
+
+    await Team.delete(req.params.id);
     res.json({ success: true, message: 'Команда удалена' });
   } catch (error) {
     console.error('Delete team error:', error);
@@ -69,35 +94,54 @@ const deleteTeam = async (req, res) => {
   }
 };
 
-// Присоединение к команде
 const joinTeam = async (req, res) => {
   try {
-    const team = await Team.addMember(req.params.id, req.user.id);
+    const team = await Team.findById(req.params.id);
     if (!team) {
       return res.status(404).json({ error: 'Команда не найдена' });
     }
-    res.json({ success: true, data: team });
+
+    if (Team.isMember(team, req.user.id)) {
+      return res.status(400).json({ error: 'Вы уже в этой команде' });
+    }
+
+    const updated = await Team.addMember(req.params.id, req.user.id);
+    const fullTeam = await Team.findById(updated.id);
+    res.json({ success: true, data: fullTeam });
   } catch (error) {
     console.error('Join team error:', error);
-    res.status(500).json({ error: 'Ошибка при присоединении к команде' });
+    res.status(error.status || 500).json({
+      error: error.message || 'Ошибка при присоединении к команде',
+    });
   }
 };
 
-// Выход из команды
 const leaveTeam = async (req, res) => {
   try {
-    const team = await Team.removeMember(req.params.id, req.user.id);
+    const team = await Team.findById(req.params.id);
     if (!team) {
       return res.status(404).json({ error: 'Команда не найдена' });
     }
-    res.json({ success: true, data: team });
+
+    if (!Team.isMember(team, req.user.id)) {
+      return res.status(400).json({ error: 'Вы не состоите в этой команде' });
+    }
+
+    if (Number(team.captain_id) === Number(req.user.id)) {
+      return res.status(400).json({
+        error: 'Капитан не может покинуть команду. Удалите команду или передайте капитанство',
+      });
+    }
+
+    const updated = await Team.removeMember(req.params.id, req.user.id);
+    const fullTeam = await Team.findById(updated.id);
+    res.json({ success: true, data: fullTeam });
   } catch (error) {
     console.error('Leave team error:', error);
     res.status(500).json({ error: 'Ошибка при выходе из команды' });
   }
 };
 
-// Получение команд пользователя
 const getUserTeams = async (req, res) => {
   try {
     const teams = await Team.findByUser(req.user.id);
@@ -105,6 +149,30 @@ const getUserTeams = async (req, res) => {
   } catch (error) {
     console.error('Get user teams error:', error);
     res.status(500).json({ error: 'Ошибка при получении команд пользователя' });
+  }
+};
+
+const getTeamMembers = async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id);
+    if (!team) {
+      return res.status(404).json({ error: 'Команда не найдена' });
+    }
+
+    const memberIds = team.members || [];
+    if (memberIds.length === 0) {
+      return res.json({ success: true, data: [] });
+    }
+
+    const { pool } = require('../config/database');
+    const result = await pool.query(
+      `SELECT id, name, email, avatar FROM users WHERE id = ANY($1::INTEGER[])`,
+      [memberIds]
+    );
+    res.json({ success: true, data: result.rows });
+  } catch (error) {
+    console.error('Get team members error:', error);
+    res.status(500).json({ error: 'Ошибка при получении участников' });
   }
 };
 
@@ -116,5 +184,6 @@ module.exports = {
   deleteTeam,
   joinTeam,
   leaveTeam,
-  getUserTeams
+  getUserTeams,
+  getTeamMembers,
 };

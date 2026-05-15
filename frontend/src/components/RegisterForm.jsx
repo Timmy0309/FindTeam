@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../store/slices/authSlice'; // Используем асинхронный экшен
 import styles from '../styles/AuthForm.module.css';
 
@@ -109,7 +109,7 @@ function RegisterForm() {
         </form>
         
         <p className={styles.authFooter}>
-          Уже есть аккаунт? <a href="/login">Войти</a>
+          Уже есть аккаунт? <Link to="/login" className={styles.authLink}>Войти</Link>
         </p>
       </div>
     </div>

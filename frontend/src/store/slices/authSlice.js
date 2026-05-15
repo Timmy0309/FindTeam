@@ -1,7 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userAPI } from '../../services/api';
 
-// Асинхронные действия
+const DEFAULT_RIGHTS = [
+  'can_view_teams',
+  'can_view_players',
+  'can_send_messages',
+  'can_create_teams',
+];
+
+const loadStoredUser = () => {
+  try {
+    const raw = localStorage.getItem('user');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    return null;
+  }
+};
+
+const storedUser = loadStoredUser();
+
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
@@ -33,12 +52,12 @@ export const registerUser = createAsyncThunk(
 );
 
 const initialState = {
-  user: JSON.parse(localStorage.getItem('user')) || null,
-  isAuthenticated: !!localStorage.getItem('token'),
+  user: storedUser,
+  isAuthenticated: !!localStorage.getItem('token') && !!storedUser,
   loading: false,
   error: null,
-  roles: JSON.parse(localStorage.getItem('user'))?.roles || ['user'],
-  rights: JSON.parse(localStorage.getItem('user'))?.rights || ['can_view_teams', 'can_view_players', 'can_send_messages']
+  roles: storedUser?.roles || ['user'],
+  rights: storedUser?.rights || DEFAULT_RIGHTS,
 };
 
 const authSlice = createSlice({
@@ -55,11 +74,10 @@ const authSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
-      // Логин
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -68,14 +86,13 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
-        state.roles = action.payload.user.roles;
-        state.rights = action.payload.user.rights;
+        state.roles = action.payload.user.roles || ['user'];
+        state.rights = action.payload.user.rights || DEFAULT_RIGHTS;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Регистрация
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -84,14 +101,14 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
-        state.roles = action.payload.user.roles;
-        state.rights = action.payload.user.rights;
+        state.roles = action.payload.user.roles || ['user'];
+        state.rights = action.payload.user.rights || DEFAULT_RIGHTS;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
-  }
+  },
 });
 
 export const { logout, clearError } = authSlice.actions;

@@ -1,23 +1,25 @@
 const { pool } = require('../config/database');
 
+const normalizeMembers = (members = []) =>
+  (members || []).map((id) => Number(id));
+
 class Team {
-  // Создание команды
   static async create(teamData) {
     const { name, game, description, max_players, captain_id } = teamData;
+    const captainId = Number(captain_id);
     const query = `
-      INSERT INTO teams (name, game, description, max_players, captain_id, members)
-      VALUES ($1, $2, $3, $4, $5, ARRAY[$5])
+      INSERT INTO teams (name, game, description, max_players, captain_id, members, current_players)
+      VALUES ($1, $2, $3, $4, $5, ARRAY[$5]::INTEGER[], 1)
       RETURNING *
     `;
-    const values = [name, game, description, max_players || 5, captain_id];
+    const values = [name, game, description || '', max_players || 5, captainId];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
 
-  // Получение всех команд
   static async findAll(filters = {}) {
     let query = `
-      SELECT t.*, u.name as captain_name 
+      SELECT t.*, u.name AS captain_name
       FROM teams t
       LEFT JOIN users u ON t.captain_id = u.id
       WHERE 1=1
@@ -31,16 +33,19 @@ class Team {
       valueIndex++;
     }
 
-    query += ` ORDER BY t.created_at DESC`;
+    if (filters.playersNeeded === 'open') {
+      query += ' AND COALESCE(t.current_players, 0) < t.max_players';
+    }
+
+    query += ' ORDER BY t.created_at DESC';
 
     const result = await pool.query(query, values);
     return result.rows;
   }
 
-  // Поиск команды по id
   static async findById(id) {
     const query = `
-      SELECT t.*, u.name as captain_name 
+      SELECT t.*, u.name AS captain_name
       FROM teams t
       LEFT JOIN users u ON t.captain_id = u.id
       WHERE t.id = $1
@@ -49,11 +54,10 @@ class Team {
     return result.rows[0];
   }
 
-  // Обновление команды
   static async update(id, teamData) {
     const { name, game, description, max_players } = teamData;
     const query = `
-      UPDATE teams 
+      UPDATE teams
       SET name = COALESCE($1, name),
           game = COALESCE($2, game),
           description = COALESCE($3, description),
@@ -67,37 +71,47 @@ class Team {
     return result.rows[0];
   }
 
-  // Добавление участника в команду
   static async addMember(teamId, userId) {
     const team = await this.findById(teamId);
     if (!team) return null;
-    
-    if (!team.members.includes(userId)) {
-      const members = [...team.members, userId];
-      const query = `
-        UPDATE teams 
-        SET members = $1,
-            current_players = array_length($1, 1),
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $2
-        RETURNING *
-      `;
-      const result = await pool.query(query, [members, teamId]);
-      return result.rows[0];
+
+    const uid = Number(userId);
+    const members = normalizeMembers(team.members);
+
+    if (members.includes(uid)) {
+      return team;
     }
-    return team;
+
+    if (members.length >= team.max_players) {
+      const error = new Error('Команда уже заполнена');
+      error.status = 400;
+      throw error;
+    }
+
+    const newMembers = [...members, uid];
+    const query = `
+      UPDATE teams
+      SET members = $1::INTEGER[],
+          current_players = COALESCE(array_length($1::INTEGER[], 1), 0),
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+      RETURNING *
+    `;
+    const result = await pool.query(query, [newMembers, teamId]);
+    return result.rows[0];
   }
 
-  // Удаление участника из команды
   static async removeMember(teamId, userId) {
     const team = await this.findById(teamId);
     if (!team) return null;
-    
-    const members = team.members.filter(m => m !== userId);
+
+    const uid = Number(userId);
+    const members = normalizeMembers(team.members).filter((m) => m !== uid);
+
     const query = `
-      UPDATE teams 
-      SET members = $1,
-          current_players = array_length($1, 1),
+      UPDATE teams
+      SET members = $1::INTEGER[],
+          current_players = GREATEST(COALESCE(array_length($1::INTEGER[], 1), 0), 0),
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $2
       RETURNING *
@@ -106,22 +120,26 @@ class Team {
     return result.rows[0];
   }
 
-  // Удаление команды
   static async delete(id) {
     const query = 'DELETE FROM teams WHERE id = $1 RETURNING id';
     const result = await pool.query(query, [id]);
     return result.rows[0];
   }
 
-  // Получение команд пользователя
   static async findByUser(userId) {
     const query = `
-      SELECT * FROM teams 
-      WHERE $1 = ANY(members)
-      ORDER BY created_at DESC
+      SELECT t.*, u.name AS captain_name
+      FROM teams t
+      LEFT JOIN users u ON t.captain_id = u.id
+      WHERE $1 = ANY(t.members)
+      ORDER BY t.created_at DESC
     `;
-    const result = await pool.query(query, [userId]);
+    const result = await pool.query(query, [Number(userId)]);
     return result.rows;
+  }
+
+  static isMember(team, userId) {
+    return normalizeMembers(team?.members).includes(Number(userId));
   }
 }
 

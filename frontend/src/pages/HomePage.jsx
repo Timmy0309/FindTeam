@@ -1,55 +1,98 @@
-import React from 'react';
-import GameCard from '../components/GameCard';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPopularGames, fetchGames } from '../store/slices/gamesSlice';
 import styles from '../App.module.css';
 
-// "База данных" игр для примера (обычно это приходит с сервера)
-const popularGames = [
-  {
-    id: 1,
-    gameName: "Dota 2",
-    imageUrl: "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota2_social.jpg",
-    playerCount: "450K"
-  },
-  {
-    id: 2,
-    gameName: "CS:GO 2",
-    imageUrl: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/header.jpg",
-    playerCount: "800K"
-  },
-  {
-    id: 3,
-    gameName: "Brawl Stars",
-    imageUrl: "https://avatars.mds.yandex.net/i?id=ffa83b6f86390b28efcf2a14fd02e976412292df-5613292-images-thumbs&n=13",
-    playerCount: "320K"
-  },
-  {
-    id: 4,
-    gameName: "Minecraft",
-    imageUrl: "https://ir.ozone.ru/s3/multimedia-1-o/7256266008.jpg",
-    playerCount: "1.2M"
-  }
-];
-
 function HomePage() {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { popularGames, games, loading } = useSelector((state) => state.games);
+
+  useEffect(() => {
+    dispatch(fetchPopularGames());
+    dispatch(fetchGames());
+  }, [dispatch]);
+
+  const displayGames = popularGames.length > 0 ? popularGames : [];
+
   return (
-    <>
-      
-      <main className={styles.mainContent}>
-        <section className={styles.gamesSection}>
-          <h2>Популярные игры</h2>
-          <div className={styles.cardGrid}>
-            {popularGames.map((game) => (
-              <GameCard
-                key={game.id}
-                gameName={game.gameName}
-                imageUrl={game.imageUrl}
-                playerCount={game.playerCount}
-              />
-            ))}
+    <main className={styles.mainContent}>
+      <section className={styles.gamesSection}>
+        <h2>Популярные игры</h2>
+        <p className={styles.sectionSubtitle}>
+          Игры, в которых уже есть активные команды
+        </p>
+
+        {loading && <div className={styles.loading}>Загрузка...</div>}
+
+        {!loading && displayGames.length === 0 && (
+          <div className={styles.emptyState}>
+            <p>Пока нет команд. Создайте первую команду и выберите игру!</p>
+            <Link to={isAuthenticated ? '/create-team' : '/register'} className={styles.primaryButton}>
+              {isAuthenticated ? 'Создать команду' : 'Зарегистрироваться'}
+            </Link>
+          </div>
+        )}
+
+        <div className={styles.cardGrid}>
+          {displayGames.map((game) => (
+            <div key={game.id} className={styles.gameCard}>
+              <div
+                className={styles.gameIcon}
+                style={{ backgroundColor: game.color || '#667eea' }}
+              >
+                {game.icon || '🎮'}
+              </div>
+              <h3>{game.name}</h3>
+              <p>Команд: {game.team_count || 0}</p>
+              <Link
+                to={`/teams?game=${encodeURIComponent(game.name)}`}
+                className={styles.findButton}
+              >
+                Найти команду
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {isAuthenticated ? (
+        <section className={styles.quickActionsSection}>
+          <h2>Быстрые действия</h2>
+          <div className={styles.quickActionsGrid}>
+            <Link to="/create-team" className={styles.quickActionCard}>
+              <div className={styles.quickActionIcon}>➕</div>
+              <h3>Создать команду</h3>
+              <p>Набери игроков для своей команды</p>
+            </Link>
+            <Link to="/teams" className={styles.quickActionCard}>
+              <div className={styles.quickActionIcon}>🔍</div>
+              <h3>Найти команду</h3>
+              <p>Присоединись к существующей команде</p>
+            </Link>
+            <Link to="/dialogs" className={styles.quickActionCard}>
+              <div className={styles.quickActionIcon}>💬</div>
+              <h3>Сообщения</h3>
+              <p>Общайся с тиммейтами</p>
+            </Link>
           </div>
         </section>
-      </main>
-    </>
+      ) : (
+        <section className={styles.ctaSection}>
+          <div className={styles.ctaCard}>
+            <h2>Готов найти свою команду?</h2>
+            <p>
+              Доступно {games.length} игр. Присоединяйся к сообществу и найди идеальных тиммейтов!
+            </p>
+            <div className={styles.ctaButtons}>
+              <Link to="/register" className={styles.primaryButton}>Зарегистрироваться</Link>
+              <Link to="/login" className={styles.secondaryButton}>Войти</Link>
+            </div>
+          </div>
+        </section>
+      )}
+    </main>
   );
 }
 

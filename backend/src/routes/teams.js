@@ -3,13 +3,14 @@ const router = express.Router();
 const teamController = require('../controllers/teamController');
 const { authenticate } = require('../middleware/auth');
 
-// Защищенные маршруты
-router.post('/', authenticate, teamController.createTeam); // CREATE
-router.get('/', authenticate, teamController.getTeams); // READ
-router.get('/my', authenticate, teamController.getUserTeams); // READ user's teams
-router.get('/:id', authenticate, teamController.getTeamById); // READ one
-router.put('/:id', authenticate, teamController.updateTeam); // UPDATE
-router.delete('/:id', authenticate, teamController.deleteTeam); // DELETE
+router.get('/', teamController.getTeams);
+router.get('/my', authenticate, teamController.getUserTeams);
+router.get('/:id/members', teamController.getTeamMembers);
+router.get('/:id', teamController.getTeamById);
+
+router.post('/', authenticate, teamController.createTeam);
+router.put('/:id', authenticate, teamController.updateTeam);
+router.delete('/:id', authenticate, teamController.deleteTeam);
 router.post('/:id/join', authenticate, teamController.joinTeam);
 router.post('/:id/leave', authenticate, teamController.leaveTeam);
 
