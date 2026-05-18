@@ -6,7 +6,7 @@ function Footer() {
 
   return (
     <footer className={styles.footer}>
-      <p>© {currentYear} GameTeam. Платформа для поиска команд.</p>
+      <p>© {currentYear} FindTeam. Платформа для поиска команд.</p>
     </footer>
   );
 }
