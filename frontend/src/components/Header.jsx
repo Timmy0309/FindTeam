@@ -12,7 +12,7 @@ function Header() {
     <header className={styles.header}>
       <div className={styles.logo}>
         <span className={styles.logoIcon}>🎮</span>
-        <Link to="/" className={styles.siteName}>GameTeam</Link>
+        <Link to="/" className={styles.siteName}>FindTeam</Link>
       </div>
       <nav className={styles.nav}>
         <Link to="/">Главная</Link>

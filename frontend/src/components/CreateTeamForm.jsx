@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createTeam, clearError } from '../store/slices/teamsSlice';
-import { fetchGames } from '../store/slices/gamesSlice';
+import { fetchGames, fetchPopularGames } from '../store/slices/gamesSlice';
 import styles from '../styles/CreateTeamForm.module.css';
+
+const CUSTOM_GAME_OPTION = '__custom__';
 
 function CreateTeamForm() {
   const dispatch = useDispatch();
@@ -11,12 +13,15 @@ function CreateTeamForm() {
   const { games } = useSelector((state) => state.games);
   const { error } = useSelector((state) => state.teams);
   const [loading, setLoading] = useState(false);
+  const [gameSelection, setGameSelection] = useState('');
+  const [customGameName, setCustomGameName] = useState('');
   const [formData, setFormData] = useState({
     name: '',
-    game: '',
     description: '',
     max_players: 5,
   });
+
+  const isCustomGame = gameSelection === CUSTOM_GAME_OPTION;
 
   useEffect(() => {
     dispatch(fetchGames());
@@ -31,12 +36,40 @@ function CreateTeamForm() {
     }));
   };
 
+  const handleGameSelect = (e) => {
+    setGameSelection(e.target.value);
+    if (e.target.value !== CUSTOM_GAME_OPTION) {
+      setCustomGameName('');
+    }
+  };
+
+  const resolveGameName = () => {
+    if (isCustomGame) {
+      return customGameName.trim();
+    }
+    return gameSelection;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const gameName = resolveGameName();
+    if (!gameName) {
+      return;
+    }
+
     setLoading(true);
-    const result = await dispatch(createTeam(formData));
+    const result = await dispatch(
+      createTeam({
+        ...formData,
+        game: gameName,
+      })
+    );
     setLoading(false);
+
     if (result.meta.requestStatus === 'fulfilled') {
+      dispatch(fetchGames());
+      dispatch(fetchPopularGames());
       navigate('/teams');
     }
   };
@@ -46,6 +79,7 @@ function CreateTeamForm() {
       <div className={styles.createTeamCard}>
         <h2>Создание команды</h2>
         {error && <div className={styles.errorMessage}>{error}</div>}
+
         <form onSubmit={handleSubmit} className={styles.createTeamForm}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Название команды</label>
@@ -65,18 +99,39 @@ function CreateTeamForm() {
             <select
               id="game"
               name="game"
-              value={formData.game}
-              onChange={handleChange}
-              required
+              value={gameSelection}
+              onChange={handleGameSelect}
+              required={!isCustomGame}
             >
-              <option value="">Выберите игру</option>
+              <option value="">Выберите игру из списка</option>
               {games.map((game) => (
                 <option key={game.id} value={game.name}>
                   {game.icon} {game.name}
                 </option>
               ))}
+              <option value={CUSTOM_GAME_OPTION}>✏️ Своя игра (ввести название)</option>
             </select>
           </div>
+
+          {isCustomGame && (
+            <div className={styles.formGroup}>
+              <label htmlFor="customGame">Название вашей игры</label>
+              <input
+                type="text"
+                id="customGame"
+                name="customGame"
+                value={customGameName}
+                onChange={(e) => setCustomGameName(e.target.value)}
+                placeholder="Например: Minecraft, Rust, Palworld..."
+                maxLength={100}
+                required
+                className={styles.customGameInput}
+              />
+              <p className={styles.fieldHint}>
+                Игра появится на главной странице после создания команды
+              </p>
+            </div>
+          )}
 
           <div className={styles.formGroup}>
             <label htmlFor="max_players">Максимум игроков</label>
@@ -103,7 +158,12 @@ function CreateTeamForm() {
               rows="5"
             />
           </div>
-          <button type="submit" className={styles.submitButton} disabled={loading}>
+
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={loading || !resolveGameName() || !formData.name.trim()}
+          >
             {loading ? 'Создание...' : 'Создать команду'}
           </button>
         </form>

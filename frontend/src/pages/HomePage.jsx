@@ -14,6 +14,15 @@ function HomePage() {
     dispatch(fetchGames());
   }, [dispatch]);
 
+  // Обновляем список при возврате на главную (после создания команды с новой игрой)
+  useEffect(() => {
+    const onFocus = () => {
+      dispatch(fetchPopularGames());
+    };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [dispatch]);
+
   const displayGames = popularGames.length > 0 ? popularGames : [];
 
   return (

@@ -10,14 +10,11 @@ const createTeam = async (req, res) => {
       return res.status(400).json({ error: 'Укажите название команды и игру' });
     }
 
-    const gameExists = await Game.findByName(game);
-    if (!gameExists) {
-      return res.status(400).json({ error: 'Выберите игру из списка' });
-    }
+    const gameRecord = await Game.findOrCreate(game);
 
     const team = await Team.create({
       name: name.trim(),
-      game: game.trim(),
+      game: gameRecord.name,
       description,
       max_players: Number(max_players) || 5,
       captain_id: req.user.id,

@@ -1,5 +1,5 @@
 {
-  "name": "gameteam-backend",
+  "name": "findteam-backend",
   "version": "1.0.0",
   "description": "Backend for GameTeam platform",
   "main": "src/index.js",
