@@ -31,7 +31,7 @@ function App() {
           <Route
             path="/create-team"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRights={['can_create_teams']}>
                 <CreateTeamForm />
               </ProtectedRoute>
             }
@@ -39,7 +39,7 @@ function App() {
           <Route
             path="/dialogs"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRights={['can_send_messages']}>
                 <DialogsPage />
               </ProtectedRoute>
             }
@@ -47,7 +47,7 @@ function App() {
           <Route
             path="/dialogs/:dialogId"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRights={['can_send_messages']}>
                 <DialogsPage />
               </ProtectedRoute>
             }

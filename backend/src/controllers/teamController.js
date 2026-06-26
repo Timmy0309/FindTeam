@@ -156,14 +156,24 @@ const getTeamMembers = async (req, res) => {
       return res.status(404).json({ error: 'Команда не найдена' });
     }
 
+    const isMember = Team.isMember(team, req.user.id);
+    const canViewPlayers = (req.user.rights || []).includes('can_view_players');
+    const isAdmin = (req.user.roles || []).includes('admin');
+
+    if (!isMember && !canViewPlayers && !isAdmin) {
+      return res.status(403).json({ error: 'Нет доступа к списку участников' });
+    }
+
     const memberIds = team.members || [];
     if (memberIds.length === 0) {
       return res.json({ success: true, data: [] });
     }
 
     const { pool } = require('../config/database');
+    const showEmail = isAdmin || isMember;
+    const fields = showEmail ? 'id, name, email, avatar' : 'id, name, avatar';
     const result = await pool.query(
-      `SELECT id, name, email, avatar FROM users WHERE id = ANY($1::INTEGER[])`,
+      `SELECT ${fields} FROM users WHERE id = ANY($1::INTEGER[])`,
       [memberIds]
     );
     res.json({ success: true, data: result.rows });

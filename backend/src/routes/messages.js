@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const messageController = require('../controllers/messageController');
-const { authenticate } = require('../middleware/auth');
+const { authenticate, requireRight } = require('../middleware/auth');
 
 router.use(authenticate);
+router.use(requireRight('can_send_messages'));
 
 router.post('/', messageController.sendMessage);
 router.get('/dialogs', messageController.getUserDialogs);

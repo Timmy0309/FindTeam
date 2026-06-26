@@ -1,0 +1,414 @@
+{
+  "generatedAt": "2026-06-26T11:41:52.498Z",
+  "summary": {
+    "total": 63,
+    "passed": 63,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 3676
+  },
+  "suites": [
+    {
+      "file": "tests\\integration\\rbac.test.js",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "RBAC Integration новый пользователь получает стандартные права",
+          "status": "passed",
+          "durationMs": 3,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Integration права проверяются на сервере, а не только в токене",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Integration токен содержит только id, роли загружаются из БД",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "file": "tests\\fuzz\\rbac.fuzz.test.js",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав Пользователь без can_view_players GET /api/users → 403",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав Пользователь без can_view_players GET /api/users/:otherId → 403",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав Пользователь без can_create_teams POST /api/teams → 403",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав Пользователь без can_send_messages GET /api/messages/dialogs → 403",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав IDOR — изменение чужого профиля PUT /api/users/:otherId → 403",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав IDOR — изменение чужого профиля DELETE /api/users/:otherId → 403",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав IDOR — изменение чужого профиля PUT /api/users/:selfId → 200",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав GET /api/teams/:id/members без доступа возвращает 403 для постороннего без can_view_players",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "RBAC Fuzzing — попытки обхода прав Администратор может удалить другого пользователя",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "file": "tests\\fuzz\\api.fuzz.test.js",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name=' OR '1'='1",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name='; DROP TABLE users; --",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name=1; SELECT * FROM users",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name=admin'--",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name=' UNION SELECT NULL, email, password FROM users --",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name=<script>alert(1)</script>",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name=\"><img src=x onerror=alert(1)>",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name=javascript:alert('xss')",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register не падает с 500 при name=<svg onload=alert(1)>",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/register fast-check: случайные строки в полях регистрации",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/login не падает с 500 при email=' OR '1'='1",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/login не падает с 500 при email='; DROP TABLE users; --",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/login не падает с 500 при email=1; SELECT * FROM users",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/login не падает с 500 при email=admin'--",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/users/login не падает с 500 при email=' UNION SELECT NULL, email, password FROM users --",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=-1",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=0",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=999999999",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=abc",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=1.5",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=1;DROP TABLE teams",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=null",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=undefined",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/users/:id — произвольные ID не падает с 500 при id=%00",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/teams — переполнение и инъекции не падает с 500 при длинном description",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/teams — переполнение и инъекции не падает с 500 при длинном description",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/teams — переполнение и инъекции не падает с 500 при длинном description",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/teams — переполнение и инъекции не падает с 500 при длинном description",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/teams — переполнение и инъекции не падает с 500 при XSS в name=<script>alert(1)</script>",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/teams — переполнение и инъекции не падает с 500 при XSS в name=\"><img src=x onerror=alert(1)>",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/teams — переполнение и инъекции не падает с 500 при XSS в name=javascript:alert('xss')",
+          "status": "passed",
+          "durationMs": 1,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные POST /api/teams — переполнение и инъекции не падает с 500 при XSS в name=<svg onload=alert(1)>",
+          "status": "passed",
+          "durationMs": 0,
+          "failureMessages": []
+        },
+        {
+          "name": "API Fuzzing — входные данные GET /api/health — устойчивость всегда возвращает 200",
+          "status": "passed",
+          "durationMs": 37,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "file": "tests\\fuzz\\auth.fuzz.test.js",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Защищённые эндпоинты без токена get /api/users → 401 без токена",
+          "status": "passed",
+          "durationMs": 9,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Защищённые эндпоинты без токена get /api/users/1 → 401 без токена",
+          "status": "passed",
+          "durationMs": 10,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Защищённые эндпоинты без токена get /api/teams/my → 401 без токена",
+          "status": "passed",
+          "durationMs": 8,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Защищённые эндпоинты без токена post /api/teams → 401 без токена",
+          "status": "passed",
+          "durationMs": 10,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Защищённые эндпоинты без токена get /api/messages/dialogs → 401 без токена",
+          "status": "passed",
+          "durationMs": 8,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: ",
+          "status": "passed",
+          "durationMs": 9,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: not.a.jwt",
+          "status": "passed",
+          "durationMs": 8,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: Bearer invalid",
+          "status": "passed",
+          "durationMs": 7,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.invalid.signature",
+          "status": "passed",
+          "durationMs": 9,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: null",
+          "status": "passed",
+          "durationMs": 6,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: undefined",
+          "status": "passed",
+          "durationMs": 5,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "status": "passed",
+          "durationMs": 7,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: ../../admin",
+          "status": "passed",
+          "durationMs": 6,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены отклоняет токен: ' OR 1=1 --",
+          "status": "passed",
+          "durationMs": 7,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Некорректные JWT-токены fast-check: случайные строки в Authorization",
+          "status": "passed",
+          "durationMs": 127,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) CORS — неразрешённый origin блокирует запрос с чужого origin",
+          "status": "passed",
+          "durationMs": 4,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) CORS — неразрешённый origin разрешает запрос с localhost:3000",
+          "status": "passed",
+          "durationMs": 6,
+          "failureMessages": []
+        },
+        {
+          "name": "Auth Fuzzing — JWT, CORS, заголовки (без БД) Невалидный JSON body не падает с необработанной ошибкой",
+          "status": "passed",
+          "durationMs": 31,
+          "failureMessages": []
+        }
+      ]
+    }
+  ]
+}

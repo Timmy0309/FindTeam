@@ -137,6 +137,39 @@ const createTables = async () => {
   }
 
   await seedGames();
+  await seedAdminUser();
 };
 
-module.exports = { pool, createTables, DEFAULT_RIGHTS };
+const seedAdminUser = async () => {
+  const bcrypt = require('bcrypt');
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@findteam.local';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'AdminFindTeam2024!Secure';
+
+  const existing = await pool.query('SELECT id FROM users WHERE email = $1', [adminEmail]);
+  if (existing.rows.length > 0) {
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(adminPassword, 10);
+  await pool.query(
+    `INSERT INTO users (name, email, password, avatar, roles, rights)
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [
+      'Администратор',
+      adminEmail,
+      hashedPassword,
+      'A',
+      ['admin', 'user'],
+      [
+        'can_view_teams',
+        'can_view_players',
+        'can_send_messages',
+        'can_create_teams',
+        'can_manage_users',
+      ],
+    ]
+  );
+  console.log(`Создан администратор: ${adminEmail}`);
+};
+
+module.exports = { pool, createTables, DEFAULT_RIGHTS, seedAdminUser };
