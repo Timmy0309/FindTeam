@@ -92,6 +92,6 @@ cp .env.docker.example .env
 docker-compose up -d
 ```
 
-Приложение: http://localhost:3000
+Приложение: http://176.109.106.187/
 
 Администратор создаётся автоматически (см. `ADMIN_EMAIL` / `ADMIN_PASSWORD` в `.env`).
